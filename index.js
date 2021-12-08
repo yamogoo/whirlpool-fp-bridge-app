@@ -1,6 +1,7 @@
 const sendMessage = require("./src/sendMessage");
 const encoder = require("./src/encoder");
 const buttonLed = require("./src/buttonLed");
+const recieveMessage = require("./src/recieveMessage");
 
 // --------------------------- Setup Board --------------------------- //
 
@@ -72,15 +73,26 @@ board.on("ready", function () {
 
     function fpAccessoryLidButtonOnTurnOn() {
       sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
-      // machineMotorLed.on();
+      
     };
     function fpAccessoryLidButtonOnTurnOff() {
       sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
-      // machineMotorLed.stop().off();
     };
 
     buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed, fpAccessoryLidButtonOnTurnOn, fpAccessoryLidButtonOnTurnOff);
 
+    // Recieve mesages from Protopie
+    socket.on('ppMessage', (data) => {
+      console.log('[SOCKETIO] Receive a message from Protopie Connect', data);
+
+      // Start Machine Motor
+      if (data.messageId == "@MACHINE_STARTED" && data.value == "true") {
+        machineMotorLed.on();
+      } else if (data.messageId == "@MACHINE_STARTED" && data.value == "false") {
+        machineMotorLed.stop().off();
+      }
+      
+    });
 });
 
 
@@ -108,10 +120,6 @@ socket
 
 socket.on('disconnect', () => {
   console.log('[SOCKETIO] disconnected');
-});
-
-socket.on('ppMessage', (data) => {
-  console.log('[SOCKETIO] Receive a message from Connect', data);
 });
 
 socket.on("blokdots", (data) => {
