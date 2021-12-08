@@ -1,7 +1,6 @@
 const sendMessage = require("./src/sendMessage");
 const encoder = require("./src/encoder");
 const buttonLed = require("./src/buttonLed");
-const recieveMessage = require("./src/recieveMessage");
 
 // --------------------------- Setup Board --------------------------- //
 
@@ -91,7 +90,7 @@ board.on("ready", function () {
       } else if (data.messageId == "@MACHINE_STARTED" && data.value == "false") {
         machineMotorLed.stop().off();
       }
-      
+
     });
 });
 
