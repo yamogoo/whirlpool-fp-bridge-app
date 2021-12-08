@@ -10,10 +10,8 @@ module.exports = function buttonSignal(button, led, onTurnOn, onTurnOff) {
         ledController(led, state);
 
         if (state === true) {
-            console.log("on");
             onTurnOn();
         } else {
-            console.log("off");
             onTurnOff();
         }
     });

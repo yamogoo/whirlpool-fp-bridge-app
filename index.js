@@ -36,8 +36,11 @@ board.on("ready", function () {
           knobUp = new five.Button({pin: 2, type: "digital", holdtime: 10}),
           knobDown = new five.Button({pin: 3, type: "digital", holdtime: 10}),
           // Food processor Accessory Button
-          fpAccessoryButton = new five.Button({pin: 7, type: "digital"}),
-          fpAccessoryButtonLed = new five.Led({pin: 6, type: "digital"}),
+          fpAccessoryButton = new five.Button({pin: 8, type: "digital"}),
+          fpAccessoryButtonLed = new five.Led({pin: 7, type: "digital"}),
+          // Food processor Accessory Button
+          fpAccessoryLidButton = new five.Button({pin: 6, type: "digital"}),
+          fpAccessoryLidButtonLed = new five.Led({pin: 5, type: "digital"}),
           // Motorof the Machine
           machineMotorLed = new five.Led({pin: 4, type: "digital"});
 
@@ -57,18 +60,26 @@ board.on("ready", function () {
     // Food processor Accessory Button
 
     function fpAccessoryButtonOnTurnOn() {
-      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
       sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true);
-      machineMotorLed.on();
     };
-
     function fpAccessoryButtonOnTurnOff() {
-      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
       sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false);
-      machineMotorLed.stop().off();
     };
 
     buttonLed(fpAccessoryButton, fpAccessoryButtonLed, fpAccessoryButtonOnTurnOn, fpAccessoryButtonOnTurnOff);
+
+    // Food processor Accessory Lid Button
+
+    function fpAccessoryLidButtonOnTurnOn() {
+      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
+      // machineMotorLed.on();
+    };
+    function fpAccessoryLidButtonOnTurnOff() {
+      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
+      // machineMotorLed.stop().off();
+    };
+
+    buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed, fpAccessoryLidButtonOnTurnOn, fpAccessoryLidButtonOnTurnOff);
 
 });
 
