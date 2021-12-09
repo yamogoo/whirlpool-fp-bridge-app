@@ -1,5 +1,5 @@
 const sendMessage = require("./src/sendMessage"),
-      recieveToggleValueOfMessage = require("./src/recieveMessage", "recieveToggleValueOfMessage"),
+      recieveToggleValueOfMessage = require("./src/recieveToggleValueOfMessage"),
       recieveMessage = require("./src/recieveMessage"),
       encoder = require("./src/encoder"),
       buttonLed = require("./src/buttonLed");
@@ -75,16 +75,24 @@ board.on("ready", function () {
     // Food processor Accessory Button
 
     buttonLed(fpAccessoryButton, fpAccessoryButtonLed,
-      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)},
-      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)}
+      () => {
+            sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)
+            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)
+            fpAccessoryLidButtonLed.on()
+          },
+      () => {
+            sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)
+            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)
+            fpAccessoryLidButtonLed.stop().off()
+        }
       );
 
     // Food processor Accessory Lid Button
 
     buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed,
-      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)},
-      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);}
-      );
+      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)},
+      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)}
+    );
 
     // Recieve mesages from Protopie
 
@@ -93,20 +101,14 @@ board.on("ready", function () {
 
       // Start Machine Motor
 
-      // recieveMessage(data, "@SELECTED_PAGE_ID", "sleep-mode")
-
       recieveToggleValueOfMessage(data, "@MACHINE_STARTED",
-      () => {machineMotor.on()},
-      () => {machineMotor.stop().off()}
+        () => {machineMotor.on(); console.log("motor on")},
+        () => {machineMotor.stop().off()}
       );
-
     });
 });
 
-
 // Socket
-
-
 
 socket
   .on('connect_error', (err) => {
