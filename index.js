@@ -57,7 +57,7 @@ board.on("ready", function () {
           minutes = `0${currentDate.getMinutes()}`
         }
         var hours = `${currentDate.getHours()}`;
-        var time = `${"hours:minutes"}`;
+        var time = `${hours}:${minutes}`;
         sendMessage(socket, false, "@GET_TIME", time, true);
         sendMessage(socket, false, "@GET_MINUTES", minutes, false);
         sendMessage(socket, false, "@GET_HOURS", hours, false);
