@@ -14,6 +14,15 @@ const io = require('socket.io-client'),
 const five = require("johnny-five"),
       board = new five.Board();
 
+      function exit() {
+        socket.disconnect();
+        process.exit();
+      }
+      
+      process.on('SIGINT', function () {
+      exit();
+      });
+
 // --------------------------- Board --------------------------- //
 
 board.on("ready", function () {
@@ -33,7 +42,7 @@ board.on("ready", function () {
           fpAccessoryLidButton = new five.Button({pin: 6, type: "digital"}),
           fpAccessoryLidButtonLed = new five.Led({pin: 5, type: "digital"}),
           // Motorof the Machine
-          machineMotorLed = new five.Led({pin: 4, type: "digital"});
+          machineMotor= new five.Led({pin: 4, type: "digital"});
 
     // --------------------------- Components --------------------------- //
 
@@ -54,7 +63,7 @@ board.on("ready", function () {
     // Food processor Accessory Lid Button
 
     buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed,
-      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)},
+      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)},
       () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);}
       );
 
@@ -66,8 +75,9 @@ board.on("ready", function () {
       // Start Machine Motor
 
       recieveMessage(data, "@MACHINE_STARTED",
-      () => {machineMotorLed.on()},
-      () => {machineMotorLed.stop().off()});
+      () => {machineMotor.on()},
+      () => {machineMotor.stop().off()}
+      );
 
     });
 });
@@ -75,14 +85,7 @@ board.on("ready", function () {
 
 // Socket
 
-function exit() {
-  socket.disconnect();
-  process.exit();
-}
 
-process.on('SIGINT', function () {
-exit();
-});
 
 socket
   .on('connect_error', (err) => {
