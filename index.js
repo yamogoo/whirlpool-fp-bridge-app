@@ -1,4 +1,5 @@
 const sendMessage = require("./src/sendMessage"),
+      recieveToggleValueOfMessage = require("./src/recieveMessage", "recieveToggleValueOfMessage"),
       recieveMessage = require("./src/recieveMessage"),
       encoder = require("./src/encoder"),
       buttonLed = require("./src/buttonLed");
@@ -46,6 +47,21 @@ board.on("ready", function () {
 
     // --------------------------- Components --------------------------- //
 
+    // Time
+
+    function getTime() {
+      setInterval(() => {
+        currentDate = new Date();
+        var minutes = currentDate.getMinutes();
+        var hours = currentDate.getHours();
+        var time = `${hours + ":" + minutes}`;
+        sendMessage(socket, false, "@GET_TIME", time, true);
+        sendMessage(socket, false, "@GET_MINUTES", minutes, false);
+        sendMessage(socket, false, "@GET_HOURS", hours, false);
+      }, 1000);
+    }
+    getTime();
+
     // Knob Controller (Dial)
 
     encoder(knobUp, knobDown,
@@ -74,7 +90,9 @@ board.on("ready", function () {
 
       // Start Machine Motor
 
-      recieveMessage(data, "@MACHINE_STARTED",
+      // recieveMessage(data, "@SELECTED_PAGE_ID", "sleep-mode")
+
+      recieveToggleValueOfMessage(data, "@MACHINE_STARTED",
       () => {machineMotor.on()},
       () => {machineMotor.stop().off()}
       );

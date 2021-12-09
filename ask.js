@@ -1,4 +1,5 @@
-const readline = require('readline');
+// const readline = require('readline');
+// import * as readline from "readline";
 
 async function ask(query) {
   return new Promise((resolve) => {
