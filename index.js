@@ -1,27 +1,18 @@
-const sendMessage = require("./src/sendMessage");
-const encoder = require("./src/encoder");
-const buttonLed = require("./src/buttonLed");
+const sendMessage = require("./src/sendMessage"),
+      recieveMessage = require("./src/recieveMessage"),
+      encoder = require("./src/encoder"),
+      buttonLed = require("./src/buttonLed");
+
+      // Socket.IO
+const io = require('socket.io-client'),
+      ask = require('./ask'),
+      address = 'http://localhost:9981',
+      socket = io(address, {reconnectionAttempts: 5, timeout: 1000 * 10});
 
 // --------------------------- Setup Board --------------------------- //
 
-const five = require("johnny-five");
-const board = new five.Board();
-
-// Socket.IO
-const io = require('socket.io-client');
-const ask = require('./ask');
-
-const address = 'http://localhost:9981';
-const socket = io(address, {reconnectionAttempts: 5, timeout: 1000 * 10});
-
-function exit() {
-  socket.disconnect();
-  process.exit();
-}
-
-process.on('SIGINT', function () {
-  exit();
-});
+const five = require("johnny-five"),
+      board = new five.Board();
 
 // --------------------------- Board --------------------------- //
 
@@ -47,55 +38,46 @@ board.on("ready", function () {
     // --------------------------- Components --------------------------- //
 
     // Knob Controller (Dial)
-    function knobOnUp() {
-      sendMessage(socket, helperLcd, "@KNOB_UP", 1);
-    };
 
-    function knobOnDown() {
-      sendMessage(socket, helperLcd, "@KNOB_DOWN", -1);
-    };
-
-    encoder(knobUp, knobDown, knobOnUp, knobOnDown);
+    encoder(knobUp, knobDown,
+      () => {sendMessage(socket, helperLcd, "@KNOB_UP", 1)},
+      () => {sendMessage(socket, helperLcd, "@KNOB_DOWN", -1)}
+      );
 
     // Food processor Accessory Button
 
-    function fpAccessoryButtonOnTurnOn() {
-      sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true);
-    };
-    function fpAccessoryButtonOnTurnOff() {
-      sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false);
-    };
-
-    buttonLed(fpAccessoryButton, fpAccessoryButtonLed, fpAccessoryButtonOnTurnOn, fpAccessoryButtonOnTurnOff);
+    buttonLed(fpAccessoryButton, fpAccessoryButtonLed,
+      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)},
+      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)}
+      );
 
     // Food processor Accessory Lid Button
 
-    function fpAccessoryLidButtonOnTurnOn() {
-      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
-      
-    };
-    function fpAccessoryLidButtonOnTurnOff() {
-      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
-    };
-
-    buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed, fpAccessoryLidButtonOnTurnOn, fpAccessoryLidButtonOnTurnOff);
+    buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed,
+      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)},
+      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);}
+      );
 
     // Recieve mesages from Protopie
     socket.on('ppMessage', (data) => {
       console.log('[SOCKETIO] Receive a message from Protopie Connect', data);
 
       // Start Machine Motor
-      if (data.messageId == "@MACHINE_STARTED" && data.value == "true") {
-        machineMotorLed.on();
-      } else if (data.messageId == "@MACHINE_STARTED" && data.value == "false") {
-        machineMotorLed.stop().off();
-      }
-
+      recieveMessage(data, "@MACHINE_STARTED", () => {machineMotorLed.on()}, () => {machineMotorLed.stop().off()})
     });
 });
 
 
 // Socket
+
+function exit() {
+  socket.disconnect();
+  process.exit();
+}
+
+process.on('SIGINT', function () {
+exit();
+});
 
 socket
   .on('connect_error', (err) => {
