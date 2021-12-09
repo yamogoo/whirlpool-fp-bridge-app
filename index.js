@@ -52,9 +52,12 @@ board.on("ready", function () {
     function getTime() {
       setInterval(() => {
         currentDate = new Date();
-        var minutes = currentDate.getMinutes();
-        var hours = currentDate.getHours();
-        var time = `${hours + ":" + minutes}`;
+        var minutes = `${currentDate.getMinutes()}`;
+        if (minutes.length == 1) {
+          minutes = `0${currentDate.getMinutes()}`
+        }
+        var hours = `${currentDate.getHours()}`;
+        var time = `${"hours:minutes"}`;
         sendMessage(socket, false, "@GET_TIME", time, true);
         sendMessage(socket, false, "@GET_MINUTES", minutes, false);
         sendMessage(socket, false, "@GET_HOURS", hours, false);
