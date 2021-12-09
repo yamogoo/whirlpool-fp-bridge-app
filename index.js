@@ -59,11 +59,16 @@ board.on("ready", function () {
       );
 
     // Recieve mesages from Protopie
+
     socket.on('ppMessage', (data) => {
       console.log('[SOCKETIO] Receive a message from Protopie Connect', data);
 
       // Start Machine Motor
-      recieveMessage(data, "@MACHINE_STARTED", () => {machineMotorLed.on()}, () => {machineMotorLed.stop().off()})
+
+      recieveMessage(data, "@MACHINE_STARTED",
+      () => {machineMotorLed.on()},
+      () => {machineMotorLed.stop().off()});
+      
     });
 });
 
