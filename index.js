@@ -45,18 +45,10 @@ board.on("ready", function () {
           fpAccessoryLidButtonLed = new five.Led({pin: 5, type: "digital"}),
           // Motorof the Machine
           machineMotor = new five.Led({pin: 4, type: "digital"}),
-          // MPR121 capacitive touch sensor controller address
-          MPR121_ADDRESS = 0x5B;
-          // Capacitive touch sensor controller address
-
-      // Spelling i2c
-      board.i2cConfig();
 
     // --------------------------- Components --------------------------- //
 
-
     // Capacity Touch Sensor (MPR121)
-
     capacityTouch(board, helperLcd, "@CH");
 
     // Time

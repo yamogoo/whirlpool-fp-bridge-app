@@ -1,13 +1,13 @@
 const lcdDisplayMessage = require("./lcd");
 
 module.exports = function(board, lcd, messageId, chValue) {
-    var address = 0x5B;
+    var address = 0x5B; // 0x5B default
     board.i2cRead(address, 2, function(bytes){ 
+      // console.log(bytes);
         function touchAdress(index = 0) {
           for (var i = 0; i < 4; i++) {
             // Adress
             var ch = `0x0${Math.pow(2,i)}`;
-            var prevCh = ch;
             if((bytes[index] & ch) == ch) {
               // Print channel
               if (index === 0) {
@@ -22,8 +22,8 @@ module.exports = function(board, lcd, messageId, chValue) {
         };
         touchAdress(0);
         touchAdress(1);
-        });
-      // board.i2cWrite(address, 0x5E);
+      });
+      board.i2cWrite(address, 0x5E, 0x0C);
 };
 
 // Cannels:
