@@ -57,7 +57,7 @@ board.on("ready", function () {
 
     // Capacity Touch Sensor (MPR121)
 
-    capacityTouch(board);
+    capacityTouch(board, helperLcd, "@CH");
 
     // Time
 

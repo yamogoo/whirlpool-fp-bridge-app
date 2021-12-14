@@ -1,17 +1,22 @@
-module.exports = function(board) {
+const lcdDisplayMessage = require("./lcd");
+
+module.exports = function(board, lcd, messageId, chValue) {
     var address = 0x5B;
     board.i2cRead(address, 2, function(bytes){ 
         function touchAdress(index = 0) {
           for (var i = 0; i < 4; i++) {
             // Adress
-            var adress = `0x0${Math.pow(2,i)}`;
-            if((bytes[index] & adress) == adress) {
+            var ch = `0x0${Math.pow(2,i)}`;
+            var prevCh = ch;
+            if((bytes[index] & ch) == ch) {
               // Print channel
               if (index === 0) {
-                console.log(`ch${i} is touched`);
+                chValue = i;
               } else if (index === 1) {
-                console.log(`ch${8 + i} is touched`);
+                chValue = 8 + i;
               }
+              console.log(`ch${chValue} is touched`)
+              lcdDisplayMessage(lcd, messageId, chValue);           
             }
           }
         };
