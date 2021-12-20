@@ -43,6 +43,9 @@ board.on("ready", function () {
           // Food processor Accessory Button
           fpAccessoryLidButton = new five.Button({pin: 6, type: "digital"}),
           fpAccessoryLidButtonLed = new five.Led({pin: 5, type: "digital"}),
+          // Paddle Button
+          capButton = new five.Button({pin: "A3", type: "analog"}),
+          capButtonLed = new five.Led({pin: "A2", type: "analog"}),
           // Motorof the Machine
           machineMotor = new five.Led({pin: 4, type: "digital"}),
 
@@ -96,6 +99,13 @@ board.on("ready", function () {
     buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed,
       () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)},
       () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)}
+    );
+
+    // Cap Button
+
+    buttonLed(capButton, capButtonLed,
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)},
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)}
     );
 
     // Recieve mesages from Protopie
