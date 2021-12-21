@@ -15,7 +15,11 @@ const io = require('socket.io-client'),
 // --------------------------- Setup Board --------------------------- //
 
 const five = require("johnny-five"),
-      board = new five.Board();
+      board = new five.Board({
+        // port: "COM*"// fo Windows
+        port: "/dev/tty.usbserial-0001" // for OSX
+        // port: "/dev/ttyUSB*" // for Linux
+      });
 
       function exit() {
         socket.disconnect();
@@ -27,6 +31,7 @@ const five = require("johnny-five"),
       });
 
 // --------------------------- Board --------------------------- //
+
 
 board.on("ready", function () {
 
