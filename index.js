@@ -3,6 +3,7 @@ const sendMessage = require("./src/sendMessage"),
       recieveMessage = require("./src/recieveMessage"),
       encoder = require("./src/encoder"),
       buttonLed = require("./src/buttonLed"),
+      buttonPressable = require("./src/buttonPressable"),
       capacityTouch = require("./src/MPR121");
 
       // Socket.IO
@@ -103,9 +104,9 @@ board.on("ready", function () {
 
     // Cap Button
 
-    buttonLed(capButton, capButtonLed,
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)},
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)}
+    buttonPressable(capButton, capButtonLed,
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
     );
 
     // Recieve mesages from Protopie
