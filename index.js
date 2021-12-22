@@ -55,8 +55,8 @@ board.on("ready", function () {
 
           // Food processor Accessory Button
 
-          paddleButton = new five.Button({pin: 6, type: "digital"}),
-          paddleButtonLed = new five.Led({pin: 5, type: "digital"}),
+          paddleButton = new five.Button({pin: 5, type: "digital"}),
+          // paddleButtonLed = new five.Led({pin: 5, type: "digital"}),
 
           // Paddle Button
 
@@ -101,10 +101,14 @@ board.on("ready", function () {
     );
 
     // Food processor Accessory Lid Button
-
-    buttonPressable(paddleButton, paddleButtonLed,
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
+        //paddleButtonLed
+    buttonPressable(paddleButton, false,
+      () => {
+        sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)
+      },
+      () => {
+        sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)
+      }
     );
 
     // Cap Button
