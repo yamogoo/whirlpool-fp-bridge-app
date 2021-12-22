@@ -1,6 +1,6 @@
 const ledController = require("./ledController");
 
-module.exports = function buttonSignal(button, led = false, onTurnOn, onTurnOff) {
+module.exports = function buttonSignal(button, led, onTurnOn, onTurnOff) {
 
     var state = true;
     
@@ -9,7 +9,7 @@ module.exports = function buttonSignal(button, led = false, onTurnOn, onTurnOff)
         state = !state;
         onTurnOff();
         
-        if (led == true) {
+        if (led != false) {
             ledController(led, state);
         }
     });
@@ -18,7 +18,7 @@ module.exports = function buttonSignal(button, led = false, onTurnOn, onTurnOff)
 
         state = !state;
         onTurnOn();
-        if (led == true) {
+        if (led != false) {
             ledController(led, state);
         }
     });

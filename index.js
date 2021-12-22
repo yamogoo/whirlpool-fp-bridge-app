@@ -55,12 +55,12 @@ board.on("ready", function () {
 
           // Food processor Accessory Button
 
-          fpAccessoryLidButton = new five.Button({pin: 6, type: "digital"}),
-          fpAccessoryLidButtonLed = new five.Led({pin: 5, type: "digital"}),
+          paddleButton = new five.Button({pin: 6, type: "digital"}),
+          paddleButtonLed = new five.Led({pin: 5, type: "digital"}),
 
           // Paddle Button
 
-          topButton = new five.Button({pin: "A2", type: "analog"}),
+          lidButton = new five.Button({pin: "A2", type: "analog"}),
 
           // Motorof the Machine
 
@@ -87,35 +87,35 @@ board.on("ready", function () {
     encoder(knobUp, knobDown,
       () => {sendMessage(socket, helperLcd, "@KNOB_UP", 1)},
       () => {sendMessage(socket, helperLcd, "@KNOB_DOWN", -1)}
-      );
+    );
 
     // Food processor Accessory Button
 
     buttonLed(fpAccessoryButton, fpAccessoryButtonLed,
       () => {
             sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)
-            // sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)
-            fpAccessoryLidButtonLed.on()
           },
       () => {
             sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)
-            // sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)
-            fpAccessoryLidButtonLed.stop().off()
         }
-      );
+    );
 
     // Food processor Accessory Lid Button
 
-    buttonLed(fpAccessoryLidButton, fpAccessoryLidButtonLed,
-      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)},
-      () => {sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)}
+    buttonPressable(paddleButton, paddleButtonLed,
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
     );
 
     // Cap Button
 
-    buttonPressable(topButton, false,
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
+    buttonPressable(lidButton, false,
+      () => {
+        sendMessage(socket, helperLcd, "@LID_IS_OPENED", true)
+      },
+      () => {
+        sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
+      }
     );
 
     // Recieve mesages from Protopie
