@@ -10,9 +10,9 @@ module.exports = function(board, lcd, messageId, chValue) {
             var ch = `0x0${Math.pow(2,i)}`;
             if((bytes[index] & ch) == ch) {
               // Print channel
-              if (index === 0) {
+              if (index == 0) {
                 chValue = i;
-              } else if (index === 1) {
+              } else if (index == 1) {
                 chValue = 8 + i;
               }
               console.log(`ch${chValue} is touched`)

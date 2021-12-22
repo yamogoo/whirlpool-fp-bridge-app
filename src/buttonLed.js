@@ -9,7 +9,7 @@ module.exports = function buttonSignal(button, led, onTurnOn, onTurnOff) {
         state = !state;
         ledController(led, state);
 
-        if (state === true) {
+        if (state == true) {
             onTurnOn();
         } else {
             onTurnOff();

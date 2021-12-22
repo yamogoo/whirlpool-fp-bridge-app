@@ -4,7 +4,8 @@ const sendMessage = require("./src/sendMessage"),
       encoder = require("./src/encoder"),
       buttonLed = require("./src/buttonLed"),
       buttonPressable = require("./src/buttonPressable"),
-      sendMessageOfTouchChanel = require("./src/capacityTouchMPR121");
+      time = require("./src/time"),
+      capacityTouch = require("./src/capacityTouchMPR121");
 
       // Socket.IO
 const io = require('socket.io-client'),
@@ -39,55 +40,48 @@ board.on("ready", function () {
     
     const
           // Helper LCD
-          helperLcd = new five.LCD({controller: "JHD1313M1", board});
+
+          helperLcd = new five.LCD({controller: "JHD1313M1", board}),
+
           // Knob
+
           knobUp = new five.Button({pin: 2, type: "digital", holdtime: 10}),
           knobDown = new five.Button({pin: 3, type: "digital", holdtime: 10}),
+
           // Food processor Accessory Button
+
           fpAccessoryButton = new five.Button({pin: 8, type: "digital"}),
           fpAccessoryButtonLed = new five.Led({pin: 7, type: "digital"}),
+
           // Food processor Accessory Button
+
           fpAccessoryLidButton = new five.Button({pin: 6, type: "digital"}),
           fpAccessoryLidButtonLed = new five.Led({pin: 5, type: "digital"}),
+
           // Paddle Button
+
           capButton = new five.Button({pin: "A3", type: "analog"}),
           capButtonLed = new five.Led({pin: "A2", type: "analog"}),
+
           // Motorof the Machine
+
           machineMotor = new five.Led({pin: 4, type: "digital"}),
 
-          capacityTouch = new five.Keypad({
-            controller: "MPR121",
-            address: 0x5B,
-            length: 12,
-            sensitivity: {
-              press: 0.10,
-              release: 0.05,
-            },
+          // Capacity Touch
+
+          capTouchSensorMPR121 = new five.Keypad({
+            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.10, release: 0.05},
           });
 
     // --------------------------- Components --------------------------- //
 
     // Capacity Touch Sensor (MPR121)
 
-    sendMessageOfTouchChanel(capacityTouch, socket, helperLcd, "@TOUCH_DOWN", "@TOUCH_UP", ["press", "release"]);
+    capacityTouch(capTouchSensorMPR121, socket, helperLcd, "@TOUCH_DOWN", "@TOUCH_UP", ["press", "release"]);
 
     // Time
 
-    function getTime() {
-      setInterval(() => {
-        currentDate = new Date();
-        var minutes = `${currentDate.getMinutes()}`;
-        if (minutes.length == 1) {
-          minutes = `0${currentDate.getMinutes()}`
-        }
-        var hours = `${currentDate.getHours()}`;
-        var time = `${hours}:${minutes}`;
-        sendMessage(socket, false, "@GET_TIME", time, false);
-        sendMessage(socket, false, "@GET_MINUTES", minutes, false);
-        sendMessage(socket, false, "@GET_HOURS", hours, false);
-      }, 1000);
-    }
-    // getTime();
+    time(socket, helperLcd, 1, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
 
     // Knob Controller (Dial)
 

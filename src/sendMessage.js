@@ -8,7 +8,7 @@ module.exports = function sendMessage(socket, lcd, messageId, value, showInConso
             fromName: 'Node'
         });
     }
-    if (showInConsole == true) {
+    if (showInConsole === true) {
         console.log('[SOCKETIO] Send a message to Protopie', messageId, value);
     }
     if (lcd != false) {
