@@ -60,8 +60,7 @@ board.on("ready", function () {
 
           // Paddle Button
 
-          capButton = new five.Button({pin: "A3", type: "analog"}),
-          capButtonLed = new five.Led({pin: "A2", type: "analog"}),
+          topButton = new five.Button({pin: "A2", type: "analog"}),
 
           // Motorof the Machine
 
@@ -95,12 +94,12 @@ board.on("ready", function () {
     buttonLed(fpAccessoryButton, fpAccessoryButtonLed,
       () => {
             sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)
-            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)
+            // sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)
             fpAccessoryLidButtonLed.on()
           },
       () => {
             sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)
-            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)
+            // sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)
             fpAccessoryLidButtonLed.stop().off()
         }
       );
@@ -114,7 +113,7 @@ board.on("ready", function () {
 
     // Cap Button
 
-    buttonPressable(capButton, capButtonLed,
+    buttonPressable(topButton, false,
       () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
       () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
     );
