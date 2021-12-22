@@ -1,4 +1,4 @@
-module.exports = function lcdPrintMessage(lcd, messageId, value) {
+module.exports = function lcdPrintMessage(lcd, messageId, value, showMessage = true) {
   
   var stringToPrint = messageId;
   if (value !== undefined) {
@@ -9,6 +9,8 @@ module.exports = function lcdPrintMessage(lcd, messageId, value) {
   lcd.clear().print(stringToPrint);
   if (stringToPrint.length > 16) {
     var secondLine = stringToPrint.substring(16);
-    lcd.cursor(1, 0).print(secondLine)
+    if (showMessage == true) {
+      lcd.cursor(1, 0).print(secondLine)
+    }
   }
 }

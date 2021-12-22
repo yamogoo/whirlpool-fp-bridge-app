@@ -28,7 +28,7 @@ const five = require("johnny-five"),
       }
       
       process.on('SIGINT', function () {
-      exit();
+        exit();
       });
 
 // --------------------------- Board --------------------------- //
@@ -81,7 +81,7 @@ board.on("ready", function () {
 
     // Time
 
-    time(socket, helperLcd, 1, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
+    time(socket, false, 1, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
 
     // Knob Controller (Dial)
 
