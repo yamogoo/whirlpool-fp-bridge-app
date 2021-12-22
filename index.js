@@ -4,7 +4,7 @@ const sendMessage = require("./src/sendMessage"),
       encoder = require("./src/encoder"),
       buttonLed = require("./src/buttonLed"),
       buttonPressable = require("./src/buttonPressable"),
-      capacityTouch = require("./src/MPR121");
+      sendMessageOfTouchChanel = require("./src/capacityTouchMPR121");
 
       // Socket.IO
 const io = require('socket.io-client'),
@@ -55,10 +55,21 @@ board.on("ready", function () {
           // Motorof the Machine
           machineMotor = new five.Led({pin: 4, type: "digital"}),
 
+          capacityTouch = new five.Keypad({
+            controller: "MPR121",
+            address: 0x5B,
+            length: 12,
+            sensitivity: {
+              press: 0.10,
+              release: 0.05,
+            },
+          });
+
     // --------------------------- Components --------------------------- //
 
     // Capacity Touch Sensor (MPR121)
-    capacityTouch(board, helperLcd, "@CH");
+
+    sendMessageOfTouchChanel(capacityTouch, socket, helperLcd, "@TOUCH_DOWN", "@TOUCH_UP", ["press", "release"]);
 
     // Time
 
@@ -76,7 +87,7 @@ board.on("ready", function () {
         sendMessage(socket, false, "@GET_HOURS", hours, false);
       }, 1000);
     }
-    getTime();
+    // getTime();
 
     // Knob Controller (Dial)
 
