@@ -55,7 +55,7 @@ board.on("ready", function () {
 
           // Food processor Accessory Button
 
-          paddleButton = new five.Button({pin: 5, type: "digital"}),
+          paddleButton = new five.Button({pin: 6, type: "digital"}),
           // paddleButtonLed = new five.Led({pin: 5, type: "digital"}),
 
           // Paddle Button
@@ -69,14 +69,14 @@ board.on("ready", function () {
           // Capacity Touch
 
           capTouchSensorMPR121 = new five.Keypad({
-            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.95, release: 0.95},
+            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.55, release: 0.55},
           });
 
     // --------------------------- Components --------------------------- //
 
     // Capacity Touch Sensor (MPR121)
 
-    capacityTouch(capTouchSensorMPR121, socket, helperLcd, "@TOUCH_DOWN", "@TOUCH_UP", ["press", "release"]);
+    capacityTouch(capTouchSensorMPR121, socket, helperLcd, ["press", "release"], "@TOUCH_DOWN", "@TOUCH_UP" );
 
     // Time
 

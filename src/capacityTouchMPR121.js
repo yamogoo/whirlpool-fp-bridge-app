@@ -1,6 +1,6 @@
 const sendMessage = require("./sendMessage");
 
-module.exports = function sendTouchChanel (sensor, socket, lcd, messageIdDown, messageIdUp, arrOfEvents = ["change", "press", "hold", "release"]) {
+module.exports = function sendTouchChanel (sensor, socket, lcd, arrOfEvents = ["change", "press", "hold", "release"], messageIdDown, messageIdUp, messageHold, messageChange) {
     arrOfEvents.forEach(function(eventType) {
       sensor.on(eventType, function(event) {
           function sendMessageOfTouchChanel (socket, lcd, messageIdDown, messageIdUp) {
@@ -13,10 +13,16 @@ module.exports = function sendTouchChanel (sensor, socket, lcd, messageIdDown, m
                 }
               }
             }
-            if (eventType === "press") {
+            if (arrOfEvents.length >= 1 && eventType === "press") {
               getChannel(messageIdDown);
-            } else if (eventType === "release") {
+            } else if (arrOfEvents.length >= 2 && eventType === "release") {
               getChannel(messageIdUp);
+            }
+            if (arrOfEvents.length >= 3 && eventType === "hold") {
+              getChannel(messageHold);
+            }
+            if (arrOfEvents.length == 4 && eventType === "change") {
+              getChannel(messageChange);
             }
           }
           sendMessageOfTouchChanel(socket, lcd, messageIdDown, messageIdUp);
