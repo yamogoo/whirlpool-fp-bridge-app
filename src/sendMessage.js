@@ -5,11 +5,11 @@ module.exports = function sendMessage(socket, lcd, messageId, value, showInConso
         socket.emit('ppMessage', {
             messageId,
             value,
-            fromName: 'Node'
+            fromName: 'Arduino'
         });
     }
     if (showInConsole === true) {
-        console.log('[SOCKETIO] Send a message to Protopie', messageId, value);
+        console.log('[SOCKETIO] Send a message to Server', messageId, value);
     }
     if (lcd != false) {
         lcdDisplayMessage(lcd, messageId, value);

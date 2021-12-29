@@ -8,10 +8,11 @@ const sendMessage = require("./src/sendMessage"),
       capacityTouch = require("./src/capacityTouchMPR121");
 
       // Socket.IO
-const io = require('socket.io-client'),
-      ask = require('./ask'),
+const // ask = require('./ask'),
+      io = require('socket.io-client'),
+      
       address = 'http://localhost:9981',
-      socket = io(address, {reconnectionAttempts: 5, timeout: 1000 * 10});
+      socket = io(address, {reconnectionAttempts: 10, timeout: 1000 * 10});
 
 // --------------------------- Setup Board --------------------------- //
 
@@ -48,14 +49,16 @@ board.on("ready", function () {
           knobUp = new five.Button({pin: 2, type: "digital", holdtime: 10}),
           knobDown = new five.Button({pin: 3, type: "digital", holdtime: 10}),
 
-          // Food processor Accessory Button
-
-          fpAccessoryButton = new five.Button({pin: 8, type: "digital"}),
-          fpAccessoryButtonLed = new five.Led({pin: 7, type: "digital"}),
+          knob = new five.Sensor({pin: 2, type: "digital", freq: 25}),
 
           // Food processor Accessory Button
 
-          paddleButton = new five.Button({pin: 6, type: "digital"}),
+          fpAccessoryButton = new five.Button({pin: 7, type: "digital"}),
+          // fpAccessoryButtonLed = new five.Led({pin: 7, type: "digital"}),
+
+          // Food processor Accessory Button
+
+          paddleButton = new five.Button({pin: 5, type: "digital"}),
           // paddleButtonLed = new five.Led({pin: 5, type: "digital"}),
 
           // Paddle Button
@@ -69,7 +72,7 @@ board.on("ready", function () {
           // Capacity Touch
 
           capTouchSensorMPR121 = new five.Keypad({
-            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.55, release: 0.55},
+            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.85, release: 0.85},
           });
 
     // --------------------------- Components --------------------------- //
@@ -80,7 +83,7 @@ board.on("ready", function () {
 
     // Time
 
-    time(socket, false, 1, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
+    time(socket, false, 60, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
 
     // Knob Controller (Dial)
 
@@ -91,41 +94,31 @@ board.on("ready", function () {
 
     // Food processor Accessory Button
 
-    buttonLed(fpAccessoryButton, fpAccessoryButtonLed,
-      () => {
-            sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)
-          },
-      () => {
-            sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)
-        }
+    buttonPressable(fpAccessoryButton, false,
+      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)},
+      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)}
     );
 
     // Food processor Accessory Lid Button
-        //paddleButtonLed
+    //paddleButtonLed
     buttonPressable(paddleButton, false,
-      () => {
-        sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)
-      },
-      () => {
-        sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)
-      }
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
     );
 
     // Cap Button
 
     buttonPressable(lidButton, false,
-      () => {
-        sendMessage(socket, helperLcd, "@LID_IS_OPENED", true)
-      },
-      () => {
-        sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
-      }
+      () => {sendMessage(socket, helperLcd, "@LID_IS_OPENED", true),
+            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)},
+      () => {sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
+            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)}
     );
 
     // Recieve mesages from Protopie
 
     socket.on('ppMessage', (data) => {
-      console.log('[SOCKETIO] Receive a message from Protopie Pie Connect', data);
+      console.log(`[SOCKETIO] Receive a message from ${data.fromName}`, data);
 
       // Start Machine Motor
 
@@ -150,7 +143,7 @@ socket
   })
   .on('reconnect_attempt', (count) => {
     console.error(
-      `[SOCKETIO] Retry to connect #${count}, Please make sure ProtoPie Connect is running on ${address}`
+      `[SOCKETIO] Retry to connect #${count}, Please make sure App is running on ${address}`
     );
   })
   .on('connect', async () => {
@@ -162,13 +155,13 @@ socket.on('disconnect', () => {
   console.log('[SOCKETIO] disconnected');
 });
 
-socket.on("blokdots", (data) => {
-	console.log("Received blokdots:", data.msg, data.val);
-});
+// socket.on("blokdots", (data) => {
+// 	console.log("Received blokdots:", data.msg, data.val);
+// });
 
-socket.on("disconnect", () => {
-	console.log(`Disconnected from blokdots`);
-	if(interval) {
-		clearInterval(interval);
-	}
-});
+// socket.on("disconnect", () => {
+// 	console.log(`Disconnected from blokdots`);
+// 	if(interval) {
+// 		clearInterval(interval);
+// 	}
+// });

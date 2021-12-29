@@ -1,10 +1,11 @@
 module.exports = function encoderSignal(encoderUp, encoderDown, onUp, onDown) {
 
-    var countUp = 0;
-    var countDown = 0;
-    let rotationStepper = 1;
-    let waveform = '';
-    let waveformTimeout;
+    var countUp = 0,
+        countDown = 0;
+
+    let rotationStepper = 1,
+        waveform = '',
+        waveformTimeout;
   
     encoderUp.on('up', () => {
       countUp += 1;
@@ -29,15 +30,12 @@ module.exports = function encoderSignal(encoderUp, encoderDown, onUp, onDown) {
         if (waveform.length < 2) {
           waveformTimeout = setTimeout(() => {
             waveform = '';
-            
           }, 100);
           return;
         }
-    
         if (waveformTimeout) {
           clearTimeout(waveformTimeout);
         }
-    
         if (waveform === '01') {
           onUp();
         } else if (waveform === '10') {
