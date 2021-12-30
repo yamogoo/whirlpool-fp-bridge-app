@@ -8,6 +8,7 @@ const sendMessage = require("./src/sendMessage"),
       capacityTouch = require("./src/capacityTouchMPR121");
 
 const Encoder = require("./src/Encoder/encoder");
+const johnnyFiveRotaryEncoder = require("./src/johnny-five-rotary-encoder");
 
       // Socket.IO
 const // ask = require('./ask'),
@@ -47,7 +48,10 @@ board.on("ready", function () {
 
           // Knob
 
-          knob = new Encoder({pin: 2, step: 1}),
+          // knob = new Encoder({pin: 2, step: 1}),
+          upButton = new five.Button({pin: 13, holdtime: 500}),
+          downButton = new five.Button({pin: 12, holdtime: 500}),
+          pressButton = new five.Button({pin: 11, holdtime: 500}),
 
           // Food processor Accessory Button
 
@@ -75,10 +79,35 @@ board.on("ready", function () {
 
     // Knob Controller (Dial)
 
-    knobStepper(knob, 
-      () => {sendMessage(socket, false, "@KNOB_UP", 1)},
-      () => {sendMessage(socket, false, "@KNOB_DOWN", -1)}
-    );
+    function start () {
+      sendMessage(socket, false, "@LID_IS_OPENED", true);
+    }
+
+    // knobStepper(knob, 
+    //   () => {sendMessage(socket, false, "@KNOB_UP", 1)},
+    //   () => {sendMessage(socket, false, "@KNOB_DOWN", -1)}
+    // );
+    // johnnyFiveRotaryEncoder(board, 2, 2, 2,
+    //   () => {sendMessage(socket, helperLcd, "@KNOB_UP", 1)},
+    //   () => {sendMessage(socket, helperLcd, "@KNOB_DOWN", -1)},
+    //   () => {sendMessage(socket, helperLcd, "@KNOB_PRESS", 0)},
+    // );
+    johnnyFiveRotaryEncoder({
+      board,
+      upButton,
+      downButton,
+      pressButton,
+      onUp: () => {
+        sendMessage(socket, false, "@KNOB_UP", 1);
+      },
+      onDown: () => {
+        sendMessage(socket, helperLcd, "@KNOB_DOWN", -1);
+      },
+      onPress: () => {
+        sendMessage(socket, helperLcd, "@KNOB_PRESS", 0);
+      },
+    });
+    
 
     // Capacity Touch Sensor (MPR121)
 
@@ -98,8 +127,8 @@ board.on("ready", function () {
     // Food processor Accessory Lid Button
     //paddleButtonLed
     buttonPressable(paddleButton, false,
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)},
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)}
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)},
+      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)}
     );
 
     // Cap Button
@@ -110,6 +139,8 @@ board.on("ready", function () {
       () => {sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
             sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)}
     );
+
+    start();
 
     // Recieve mesages from Protopie
 
