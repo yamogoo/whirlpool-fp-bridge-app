@@ -1,16 +1,17 @@
 const sendMessage = require("./src/sendMessage"),
       recieveToggleValueOfMessage = require("./src/recieveToggleValueOfMessage"),
       recieveMessage = require("./src/recieveMessage"),
-      encoder = require("./src/encoder"),
+      knobStepper = require("./src/rotaryEncoder"),
       buttonLed = require("./src/buttonLed"),
       buttonPressable = require("./src/buttonPressable"),
       time = require("./src/time"),
       capacityTouch = require("./src/capacityTouchMPR121");
 
+const Encoder = require("./src/Encoder/encoder");
+
       // Socket.IO
 const // ask = require('./ask'),
       io = require('socket.io-client'),
-      
       address = 'http://localhost:9981',
       socket = io(address, {reconnectionAttempts: 10, timeout: 1000 * 10});
 
@@ -46,20 +47,15 @@ board.on("ready", function () {
 
           // Knob
 
-          knobUp = new five.Button({pin: 2, type: "digital", holdtime: 10}),
-          knobDown = new five.Button({pin: 3, type: "digital", holdtime: 10}),
-
-          knob = new five.Sensor({pin: 2, type: "digital", freq: 25}),
+          knob = new Encoder({pin: 2, step: 1}),
 
           // Food processor Accessory Button
 
           fpAccessoryButton = new five.Button({pin: 7, type: "digital"}),
-          // fpAccessoryButtonLed = new five.Led({pin: 7, type: "digital"}),
 
           // Food processor Accessory Button
 
           paddleButton = new five.Button({pin: 5, type: "digital"}),
-          // paddleButtonLed = new five.Led({pin: 5, type: "digital"}),
 
           // Paddle Button
 
@@ -77,6 +73,13 @@ board.on("ready", function () {
 
     // --------------------------- Components --------------------------- //
 
+    // Knob Controller (Dial)
+
+    knobStepper(knob, 
+      () => {sendMessage(socket, false, "@KNOB_UP", 1)},
+      () => {sendMessage(socket, false, "@KNOB_DOWN", -1)}
+    );
+
     // Capacity Touch Sensor (MPR121)
 
     capacityTouch(capTouchSensorMPR121, socket, helperLcd, ["press", "release"], "@TOUCH_DOWN", "@TOUCH_UP" );
@@ -84,13 +87,6 @@ board.on("ready", function () {
     // Time
 
     time(socket, false, 60, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
-
-    // Knob Controller (Dial)
-
-    encoder(knobUp, knobDown,
-      () => {sendMessage(socket, helperLcd, "@KNOB_UP", 1)},
-      () => {sendMessage(socket, helperLcd, "@KNOB_DOWN", -1)}
-    );
 
     // Food processor Accessory Button
 
