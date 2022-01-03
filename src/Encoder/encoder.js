@@ -54,8 +54,8 @@ module.exports = class Encoder extends EventEmitter {
             this.lastValue = this.value;
             this.emit("change", this.value);
             this.emit("up", this.value);
-            console.log(this.value);
-            console.log("lastValue: ", this.lastValue);
+            // console.log(this.value);
+            // console.log("lastValue: ", this.lastValue);
         }
     } else if (this.waveform === "10") {
         this.value = this.value - 1;
@@ -63,8 +63,8 @@ module.exports = class Encoder extends EventEmitter {
             this.lastValue = this.value;
             this.emit("change", this.value);
             this.emit("down", this.value);
-            console.log(this.value );
-            console.log("lastValue: ", this.lastValue);
+            // console.log(this.value );
+            // console.log("lastValue: ", this.lastValue);
         }
     }
 
