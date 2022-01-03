@@ -11,7 +11,7 @@ module.exports = class Encoder extends EventEmitter {
 
     this.waveform = "";
     this.waveformTimeout;
-    var lastValue = 0;
+    this.lastValue = 0;
 
     this.upButton = new five.Button({
         pin: pin,
@@ -39,7 +39,8 @@ module.exports = class Encoder extends EventEmitter {
     if (this.waveform.length < 2) {
         this.waveformTimeout = setTimeout(() => {
             this.waveform = "";
-        }, 110);
+            this.lastValue = 0;
+        }, 120);
         return;
     }
 
@@ -49,17 +50,21 @@ module.exports = class Encoder extends EventEmitter {
 
     if (this.waveform === "01") {
         this.value = this.value + 1;
-        if (this.value%this.step === 0) {
+        if (this.value%this.step === 0 && this.value != this.lastValue) {
+            this.lastValue = this.value;
             this.emit("change", this.value);
             this.emit("up", this.value);
-            // console.log(this.value);
+            console.log(this.value);
+            console.log("lastValue: ", this.lastValue);
         }
     } else if (this.waveform === "10") {
         this.value = this.value - 1;
-        if (this.value%this.step === 0) {
+        if (this.value%this.step === 0 && this.value != this.lastValue) {
+            this.lastValue = this.value;
             this.emit("change", this.value);
             this.emit("down", this.value);
-            // console.log(this.value );
+            console.log(this.value );
+            console.log("lastValue: ", this.lastValue);
         }
     }
 
