@@ -85,10 +85,10 @@ board.on("ready", function () {
 
     knobStepper(knob, 
       () => {
-        // sendMessage(socket, false, "@KNOB_UP", 1)
+        sendMessage(socket, false, "@KNOB_UP", 1)
       },
       () => {
-        // sendMessage(socket, false, "@KNOB_DOWN", -1)
+        sendMessage(socket, false, "@KNOB_DOWN", -1)
       }
     );
     // johnnyFiveRotaryEncoder(board, 2, 2, 2,

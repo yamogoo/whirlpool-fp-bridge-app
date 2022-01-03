@@ -14,12 +14,12 @@ module.exports = class Encoder extends EventEmitter {
 
     this.upButton = new five.Button({
         pin: pin,
-        holdtime: 500,
+        holdtime: 1000,
         board,
     });
     this.downButton = new five.Button({
         pin: pin + 1,
-        holdtime: 500,
+        holdtime: 1000,
         board,
     });
 
