@@ -11,35 +11,36 @@ module.exports = class Encoder extends EventEmitter {
 
     this.waveform = "";
     this.waveformTimeout;
-    var lastValue = 0;
 
     this.upButton = new five.Button({
         pin: pin,
-        holdtime: 500,
+        holdtime: 1000,
         board,
-      });
-      this.downButton = new five.Button({
+    });
+    this.downButton = new five.Button({
         pin: pin + 1,
-        holdtime: 500,
+        holdtime: 1000,
         board,
-      });
-  
-      this.upButton.on("up", () => {
+    });
+
+    this.upButton.on("up", () => {       
         this.waveform += "1";
         this.handleWaveform();
-      });
-  
-      this.downButton.on("up", () => {
+        console.log(this.value);
+    });
+
+    this.downButton.on("up", () => {
         this.waveform += "0";
         this.handleWaveform();
-      });
+        console.log(this.value);
+    });
   }
 
   handleWaveform() {
     if (this.waveform.length < 2) {
         this.waveformTimeout = setTimeout(() => {
             this.waveform = "";
-        }, 110);
+        }, 20);
         return;
     }
 
@@ -52,14 +53,14 @@ module.exports = class Encoder extends EventEmitter {
         if (this.value%this.step === 0) {
             this.emit("change", this.value);
             this.emit("up", this.value);
-            // console.log(this.value);
+            console.log(this.value);
         }
     } else if (this.waveform === "10") {
         this.value = this.value - 1;
         if (this.value%this.step === 0) {
             this.emit("change", this.value);
             this.emit("down", this.value);
-            // console.log(this.value );
+            console.log(this.value );
         }
     }
 
