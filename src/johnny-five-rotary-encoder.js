@@ -22,7 +22,7 @@ module.exports = function rotaryEncoder({upButton, downButton, pressButton, onUp
       if (waveform.length < 2) {
         waveformTimeout = setTimeout(() => {
           waveform = '';
-        }, 8);
+        }, 1);
         return;
       }
   
@@ -31,8 +31,10 @@ module.exports = function rotaryEncoder({upButton, downButton, pressButton, onUp
       }
   
       if (waveform === '01') {
+        console.log(waveform);
         onUp();
       } else if (waveform === '10') {
+        
         onDown();
       }
   

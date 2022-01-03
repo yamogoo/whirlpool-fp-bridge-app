@@ -53,12 +53,14 @@ module.exports = class Encoder extends EventEmitter {
         if (this.value%this.step === 0) {
             this.emit("change", this.value);
             this.emit("up", this.value);
+            console.log(this.value);
         }
     } else if (this.waveform === "10") {
         this.value = this.value - 1;
         if (this.value%this.step === 0) {
             this.emit("change", this.value);
             this.emit("down", this.value);
+            console.log(this.value );
         }
     }
 

@@ -48,10 +48,10 @@ board.on("ready", function () {
 
           // Knob
 
-          // knob = new Encoder({pin: 2, step: 1}),
-          upButton = new five.Button({pin: 13, holdtime: 500}),
-          downButton = new five.Button({pin: 12, holdtime: 500}),
-          pressButton = new five.Button({pin: 11, holdtime: 500}),
+          knob = new Encoder({pin: 2, step: 3}),
+          // upButton = new five.Button({pin: 13, holdtime: 500}),
+          // downButton = new five.Button({pin: 12, holdtime: 500}),
+          // pressButton = new five.Button({pin: 11, holdtime: 500}),
 
           // Food processor Accessory Button
 
@@ -83,30 +83,34 @@ board.on("ready", function () {
       sendMessage(socket, false, "@LID_IS_OPENED", true);
     }
 
-    // knobStepper(knob, 
-    //   () => {sendMessage(socket, false, "@KNOB_UP", 1)},
-    //   () => {sendMessage(socket, false, "@KNOB_DOWN", -1)}
-    // );
+    knobStepper(knob, 
+      () => {
+        // sendMessage(socket, false, "@KNOB_UP", 1)
+      },
+      () => {
+        // sendMessage(socket, false, "@KNOB_DOWN", -1)
+      }
+    );
     // johnnyFiveRotaryEncoder(board, 2, 2, 2,
     //   () => {sendMessage(socket, helperLcd, "@KNOB_UP", 1)},
     //   () => {sendMessage(socket, helperLcd, "@KNOB_DOWN", -1)},
     //   () => {sendMessage(socket, helperLcd, "@KNOB_PRESS", 0)},
     // );
-    johnnyFiveRotaryEncoder({
-      board,
-      upButton,
-      downButton,
-      pressButton,
-      onUp: () => {
-        sendMessage(socket, false, "@KNOB_UP", 1);
-      },
-      onDown: () => {
-        sendMessage(socket, helperLcd, "@KNOB_DOWN", -1);
-      },
-      onPress: () => {
-        sendMessage(socket, helperLcd, "@KNOB_PRESS", 0);
-      },
-    });
+    // johnnyFiveRotaryEncoder({
+    //   board,
+    //   upButton,
+    //   downButton,
+    //   pressButton,
+    //   onUp: () => {
+    //     sendMessage(socket, false, "@KNOB_UP", 1);
+    //   },
+    //   onDown: () => {
+    //     sendMessage(socket, helperLcd, "@KNOB_DOWN", -1);
+    //   },
+    //   onPress: () => {
+    //     sendMessage(socket, helperLcd, "@KNOB_PRESS", 0);
+    //   },
+    // });
     
 
     // Capacity Touch Sensor (MPR121)
