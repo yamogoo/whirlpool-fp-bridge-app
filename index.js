@@ -48,7 +48,7 @@ board.on("ready", function () {
 
           // Knob
 
-          knob = new Encoder({pin: 2, step: 3}),
+          knob = new Encoder({pin: 2, step: 1}),
           // upButton = new five.Button({pin: 13, holdtime: 500}),
           // downButton = new five.Button({pin: 12, holdtime: 500}),
           // pressButton = new five.Button({pin: 11, holdtime: 500}),

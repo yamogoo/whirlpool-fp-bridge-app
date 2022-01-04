@@ -27,11 +27,13 @@ module.exports = class Encoder extends EventEmitter {
       this.upButton.on("up", () => {
         this.waveform += "1";
         this.handleWaveform();
+        console.log(this.waveform);
       });
   
       this.downButton.on("up", () => {
         this.waveform += "0";
         this.handleWaveform();
+        console.log(this.waveform);
       });
   }
 
