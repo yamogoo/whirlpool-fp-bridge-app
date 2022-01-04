@@ -13,7 +13,8 @@ const johnnyFiveRotaryEncoder = require("./src/johnny-five-rotary-encoder");
       // Socket.IO
 const // ask = require('./ask'),
       io = require('socket.io-client'),
-      address = 'http://localhost:9981',
+      ip = 'localhost',
+      address = `http://${ip}:9981`,
       socket = io(address, {reconnectionAttempts: 10, timeout: 1000 * 10});
 
 // --------------------------- Setup Board --------------------------- //
