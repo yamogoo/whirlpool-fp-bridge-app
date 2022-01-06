@@ -82,6 +82,7 @@ board.on("ready", function () {
 
     function start () {
       sendMessage(socket, false, "@LID_IS_OPENED", true);
+      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
     }
 
     knobStepper(knob, 
@@ -92,27 +93,6 @@ board.on("ready", function () {
         sendMessage(socket, false, "@KNOB_DOWN", -1)
       }
     );
-    // johnnyFiveRotaryEncoder(board, 2, 2, 2,
-    //   () => {sendMessage(socket, helperLcd, "@KNOB_UP", 1)},
-    //   () => {sendMessage(socket, helperLcd, "@KNOB_DOWN", -1)},
-    //   () => {sendMessage(socket, helperLcd, "@KNOB_PRESS", 0)},
-    // );
-    // johnnyFiveRotaryEncoder({
-    //   board,
-    //   upButton,
-    //   downButton,
-    //   pressButton,
-    //   onUp: () => {
-    //     sendMessage(socket, false, "@KNOB_UP", 1);
-    //   },
-    //   onDown: () => {
-    //     sendMessage(socket, helperLcd, "@KNOB_DOWN", -1);
-    //   },
-    //   onPress: () => {
-    //     sendMessage(socket, helperLcd, "@KNOB_PRESS", 0);
-    //   },
-    // });
-    
 
     // Capacity Touch Sensor (MPR121)
 
