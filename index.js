@@ -62,7 +62,7 @@ board.on("ready", function () {
 
           // Knob
 
-          knob = new Encoder({pin: 2, step: 1}),
+          knob = new Encoder({pin: 5, step: 1}),
 
           // Food processor Accessory Button
 
@@ -70,7 +70,7 @@ board.on("ready", function () {
 
           // Food processor Accessory Button
 
-          paddleButton = new five.Button({pin: 5, type: "digital"}),
+          paddleButton = new five.Button({pin: 4, type: "digital"}),
 
           // Paddle Button
 
