@@ -84,7 +84,7 @@ board.on("ready", function () {
           // Capacity Touch
 
           capTouchSensorMPR121 = new five.Keypad({
-            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.98, release: 0.97},
+            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.91, release: 0.91},
           });
 
     // --------------------------- Components --------------------------- //
