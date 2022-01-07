@@ -27,21 +27,3 @@ module.exports = function sendTouchChanel (sensor, socket, lcd, channels, arrOfE
         });
     });
   }
-
-  // if (event.which == 11) {
-  //   sendMessage(socket, lcd, messageId, 1);
-  // } else if (event.which == 2) {
-  //   sendMessage(socket, lcd, messageId, 2);
-  // }
-  // else if (event.which == 3) {
-  //   sendMessage(socket, lcd, messageId, 3);
-  // }
-  // else if (event.which == 10) {
-  //   sendMessage(socket, lcd, messageId, 4);
-  // }
-  // else if (event.which == 9) {
-  //   sendMessage(socket, lcd, messageId, 5);
-  // }
-  // else if (event.which == 8) {
-  //   sendMessage(socket, lcd, messageId, 6);
-  // }

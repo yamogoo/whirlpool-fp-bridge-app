@@ -2,7 +2,7 @@
 
 const programSettings = {
   manualMode: [
-    { name: "Low", speed: 55 },
+    { name: "Low", speed: 75 },
     { name: "High", speed: 155 },
     { name: "Pulse", speed: 255 }
   ],
