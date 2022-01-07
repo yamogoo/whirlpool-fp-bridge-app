@@ -84,7 +84,7 @@ board.on("ready", function () {
           // Capacity Touch
 
           capTouchSensorMPR121 = new five.Keypad({
-            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.99, release: 1.0},
+            controller: "MPR121", address: 0x5B, length: 12, sensitivity: {press: 0.98, release: 0.97},
           });
 
     // --------------------------- Components --------------------------- //
@@ -92,8 +92,8 @@ board.on("ready", function () {
     // Knob Controller (Dial)
 
     function start () {
-      sendMessage(socket, false, "@LID_IS_OPENED", true);
-      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
+      sendMessage(socket, false, "@LID_IS_OPENED", false);
+      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
     }
 
     knobStepper(knob, 
