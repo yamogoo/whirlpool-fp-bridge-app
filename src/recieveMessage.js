@@ -1,5 +1,5 @@
-module.exports = function recieveMessage(data, messageId, value, onMessage) {
-    if (data.messageId === messageId && data.value === value) {
+module.exports = function recieveMessage(data, messageId, value="any", onMessage) {
+    if (data.messageId === messageId && data.value === value || data.messageId === messageId && data.value === "any") {
         onMessage();
     }
 };

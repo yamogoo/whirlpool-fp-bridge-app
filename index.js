@@ -1,14 +1,28 @@
+// ---------------------- Program Settings ----------------------- //
+
+const programSettings = {
+  manualMode: [
+    { name: "Low", speed: 55 },
+    { name: "High", speed: 155 },
+    { name: "Pulse", speed: 255 }
+  ],
+  programs: []
+}
+
+// --------------------------- Imports --------------------------- //
+
 const sendMessage = require("./src/sendMessage"),
       recieveToggleValueOfMessage = require("./src/recieveToggleValueOfMessage"),
       recieveMessage = require("./src/recieveMessage"),
       knobStepper = require("./src/rotaryEncoder"),
-      buttonLed = require("./src/buttonLed"),
+      // buttonLed = require("./src/buttonLed"),
       buttonPressable = require("./src/buttonPressable"),
       time = require("./src/time"),
       capacityTouch = require("./src/capacityTouchMPR121");
 
 const Encoder = require("./src/Encoder/encoder");
-const johnnyFiveRotaryEncoder = require("./src/johnny-five-rotary-encoder");
+      // Motor = require("./src/motor");
+// const johnnyFiveRotaryEncoder = require("./src/johnny-five-rotary-encoder");
 
       // Socket.IO
 const // ask = require('./ask'),
@@ -37,7 +51,6 @@ const five = require("johnny-five"),
 
 // --------------------------- Board --------------------------- //
 
-
 board.on("ready", function () {
 
     // Setup Components
@@ -50,9 +63,6 @@ board.on("ready", function () {
           // Knob
 
           knob = new Encoder({pin: 2, step: 1}),
-          // upButton = new five.Button({pin: 13, holdtime: 500}),
-          // downButton = new five.Button({pin: 12, holdtime: 500}),
-          // pressButton = new five.Button({pin: 11, holdtime: 500}),
 
           // Food processor Accessory Button
 
@@ -68,7 +78,8 @@ board.on("ready", function () {
 
           // Motorof the Machine
 
-          machineMotor = new five.Led({pin: 4, type: "digital"}),
+          motor = new five.Motor({pin: 3, type: "digital"}),
+          // motor = new Motor({board, pin: 3, type: "digital", range: [{min: 30}, {max: 255}], rpm: 9000}),
 
           // Capacity Touch
 
@@ -96,7 +107,10 @@ board.on("ready", function () {
 
     // Capacity Touch Sensor (MPR121)
 
-    capacityTouch(capTouchSensorMPR121, socket, helperLcd, ["press", "release"], "@TOUCH_DOWN", "@TOUCH_UP" );
+    capacityTouch(capTouchSensorMPR121, socket, helperLcd, 
+      [{ch: 11, value: 1}, {ch: 2, value: 2}, {ch: 3, value: 3}, {ch: 10, value: 4}, {ch: 9, value: 5}, {ch: 8, value: 6}],
+      ["press", "release"], "@TOUCH_DOWN", "@TOUCH_UP",
+    );
 
     // Time
 
@@ -127,17 +141,29 @@ board.on("ready", function () {
 
     start();
 
-    // Recieve mesages from Protopie
+    // --------------------------- // Recieve mesages from App --------------------------- //
 
     socket.on('ppMessage', (data) => {
       console.log(`[SOCKETIO] Receive a message from ${data.fromName}`, data);
 
       // Start Machine Motor
 
-      recieveToggleValueOfMessage(data, "@MACHINE_STARTED",
-        () => {machineMotor.on(); console.log("motor on")},
-        () => {machineMotor.stop().off()}
-      );
+      function startProgram () {
+        // Program Start
+        for (i = 0; i < programSettings.manualMode.length; i++) {
+          recieveMessage(data, "@PROGRAM_STARTED", `${programSettings.manualMode[i].name}`,
+            () => {motor.start(programSettings.manualMode[i].speed)}
+          );
+        };
+        // Program Stop
+        for (i = 0; i < Object.keys(programSettings.manualMode).length; i++) {
+          recieveMessage(data, "@PROGRAM_STOPPED", `${programSettings.manualMode[i].name}`,
+            () => {motor.stop()}
+          );
+        }
+      }
+
+      startProgram();
     });
 });
 
