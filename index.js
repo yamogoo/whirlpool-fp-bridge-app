@@ -1,12 +1,21 @@
 // ---------------------- Program Settings ----------------------- //
 
 const programSettings = {
-  manualMode: [
-    { name: "Low", speed: 75 },
-    { name: "High", speed: 155 },
-    { name: "Pulse", speed: 255 }
+  foodProcessor: [
+    { name: "LOW", speed: 75 },
+    { name: "HIGH", speed: 155 },
+    { name: "PULSE", speed: 255 },
   ],
-  programs: []
+  blender: [
+    { name: "BLEND-1", speed: 32 },
+    { name: "BLEND-2", speed: 64 },
+    { name: "BLEND-3", speed: 96 },
+    { name: "BLEND-4", speed: 128 },
+    { name: "BLEND-5", speed: 160 },
+    { name: "BLEND-6", speed: 192 },
+    { name: "BLEND-7", speed: 224 },
+    { name: "BLEND-8", speed: 255 },
+  ]
 }
 
 // --------------------------- Imports --------------------------- //
@@ -149,17 +158,23 @@ board.on("ready", function () {
       // Start Machine Motor
 
       function startProgram () {
-        // Program Start
-        for (i = 0; i < programSettings.manualMode.length; i++) {
-          recieveMessage(data, "@PROGRAM_STARTED", `${programSettings.manualMode[i].name}`,
-            () => {motor.start(programSettings.manualMode[i].speed)}
-          );
-        };
-        // Program Stop
-        for (i = 0; i < Object.keys(programSettings.manualMode).length; i++) {
-          recieveMessage(data, "@PROGRAM_STOPPED", `${programSettings.manualMode[i].name}`,
-            () => {motor.stop()}
-          );
+        for (const [accessories, value] of Object.entries(programSettings)) {
+          // Program Start
+          // console.log(value);
+          for (i = 0; i < value.length; i++) {
+            recieveMessage(data, "@PROGRAM_STARTED", `${value[i].name}`,
+              () => {motor.start(value[i].speed),
+                console.log("Program: ", value[i].name, value[i].speed);
+              }
+            );
+          };
+          // Program Stop
+          for (i = 0; i < value.length; i++) {
+            recieveMessage(data, "@PROGRAM_STOPPED", `${value[i].name}`,
+              () => {motor.stop(),
+                console.log("Program: ", value[i].name, 0);}
+            );
+          }
         }
       }
 
