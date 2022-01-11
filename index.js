@@ -84,6 +84,7 @@ board.on("ready", function () {
           // Paddle Button
 
           lidButton = new five.Button({pin: "A2", type: "analog"}),
+          lidButtonPin = new five.Pin({pin: "A2", type: "analog"})
 
           // Motorof the Machine
 
@@ -98,12 +99,21 @@ board.on("ready", function () {
 
     // --------------------------- Components --------------------------- //
 
-    // Knob Controller (Dial)
+    // Start
 
-    function start () {
-      sendMessage(socket, false, "@LID_IS_OPENED", false);
-      sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
-    }
+    function mounted () {
+      lidButtonPin.query(function(state) {
+        if (state.value == 1023) { 
+          sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
+         } else { 
+          sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
+          }
+      });
+    };
+    
+    mounted();
+
+    // Knob Controller (Dial)
 
     knobStepper(knob, 
       () => {
@@ -142,13 +152,13 @@ board.on("ready", function () {
     // Cap Button
 
     buttonPressable(lidButton, false,
-      () => {sendMessage(socket, helperLcd, "@LID_IS_OPENED", true),
+      () => {
+        // sendMessage(socket, helperLcd, "@LID_IS_OPENED", true),
             sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)},
-      () => {sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
+      () => {
+        // sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
             sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)}
     );
-
-    start();
 
     // --------------------------- // Recieve mesages from App --------------------------- //
 
