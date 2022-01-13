@@ -6,6 +6,10 @@ const programSettings = {
     { name: "LOW", speed: 25 },
     { name: "HIGH", speed: 50 },
     { name: "PULSE", speed: 100 },
+    { name: "CHOP", speed: 100 },
+    { name: "SHRED", speed: 100 },
+    { name: "SLICE", speed: 100 },
+    { name: "DICE", speed: 100 }
   ],
   blender: [
     { name: "BLEND-1", speed: 12.5 },
