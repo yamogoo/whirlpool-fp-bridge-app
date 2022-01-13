@@ -1,20 +1,21 @@
 // ---------------------- Program Settings ----------------------- //
 
+// Speed value in percent
 const programSettings = {
   foodProcessor: [
-    { name: "LOW", speed: 75 },
-    { name: "HIGH", speed: 155 },
-    { name: "PULSE", speed: 255 },
+    { name: "LOW", speed: 25 },
+    { name: "HIGH", speed: 50 },
+    { name: "PULSE", speed: 100 },
   ],
   blender: [
-    { name: "BLEND-1", speed: 32 },
-    { name: "BLEND-2", speed: 64 },
-    { name: "BLEND-3", speed: 96 },
-    { name: "BLEND-4", speed: 128 },
-    { name: "BLEND-5", speed: 160 },
-    { name: "BLEND-6", speed: 192 },
-    { name: "BLEND-7", speed: 224 },
-    { name: "BLEND-8", speed: 255 },
+    { name: "BLEND-1", speed: 12.5 },
+    { name: "BLEND-2", speed: 25 },
+    { name: "BLEND-3", speed: 37.5 },
+    { name: "BLEND-4", speed: 50 },
+    { name: "BLEND-5", speed: 62.5 },
+    { name: "BLEND-6", speed: 75 },
+    { name: "BLEND-7", speed: 87.5 },
+    { name: "BLEND-8", speed: 100 },
   ]
 }
 
@@ -76,6 +77,7 @@ board.on("ready", function () {
           // Food processor Accessory Button
 
           fpAccessoryButton = new five.Button({pin: 7, type: "digital"}),
+          hbjAccessoryButton = new five.Button({pin: 2, type: "digital"}),
 
           // Food processor Accessory Button
 
@@ -133,7 +135,7 @@ board.on("ready", function () {
 
     // Time
 
-    time(socket, false, 60, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
+    time(socket, false, 1, "@GET_TIME", "@GET_MINUTES", "@GET_HOURS", false);
 
     // Food processor Accessory Button
 
@@ -142,7 +144,12 @@ board.on("ready", function () {
       () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)}
     );
 
-    // Food processor Accessory Lid Button
+    buttonPressable(hbjAccessoryButton, false,
+      () => {sendMessage(socket, helperLcd, "@HBJ_ACCESSORY_IS_INSTALLED", false)},
+      () => {sendMessage(socket, helperLcd, "@HBJ_ACCESSORY_IS_INSTALLED", true)}
+    );
+
+    // Accessory Lid Button
     //paddleButtonLed
     buttonPressable(paddleButton, false,
       () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)},
@@ -171,10 +178,11 @@ board.on("ready", function () {
         for (const [accessories, value] of Object.entries(programSettings)) {
           // Program Start
           // console.log(value);
+          var speedFactor = 2.55;
           for (i = 0; i < value.length; i++) {
             recieveMessage(data, "@PROGRAM_STARTED", `${value[i].name}`,
-              () => {motor.start(value[i].speed),
-                console.log("Program: ", value[i].name, value[i].speed);
+              () => {motor.start(Math.floor(value[i].speed * speedFactor)),
+                console.log("Program: ", value[i].name, Math.floor(value[i].speed * speedFactor));
               }
             );
           };
