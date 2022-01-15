@@ -7,9 +7,9 @@ const programSettings = {
     { name: "HIGH", speed: 50 },
     { name: "PULSE", speed: 100 },
     { name: "CHOP", speed: 100 },
-    { name: "SHRED", speed: 100 },
-    { name: "SLICE", speed: 100 },
-    { name: "DICE", speed: 100 }
+    { name: "SHRED", speed: 75 },
+    { name: "SLICE", speed: 65 },
+    { name: "DICE", speed: 55 }
   ],
   blender: [
     { name: "BLEND-1", speed: 12.5 },
@@ -28,13 +28,14 @@ const programSettings = {
 const sendMessage = require("./src/sendMessage"),
       recieveToggleValueOfMessage = require("./src/recieveToggleValueOfMessage"),
       recieveMessage = require("./src/recieveMessage"),
-      knobStepper = require("./src/rotaryEncoder"),
+      // knobStepper = require("./src/rotaryEncoder"),
       // buttonLed = require("./src/buttonLed"),
       buttonPressable = require("./src/buttonPressable"),
       time = require("./src/time"),
       capacityTouch = require("./src/capacityTouchMPR121");
 
-const Encoder = require("./src/Encoder/encoder");
+// const Encoder = require("./src/Encoder/encoder");
+const knob = require("./src/Encoder/myEncoder");
       // Motor = require("./src/motor");
 // const johnnyFiveRotaryEncoder = require("./src/johnny-five-rotary-encoder");
 
@@ -72,11 +73,11 @@ board.on("ready", function () {
     const
           // Helper LCD
 
-          helperLcd = new five.LCD({controller: "JHD1313M1", board}),
+          // false = new five.LCD({controller: "JHD1313M1", board}),
 
           // Knob
 
-          knob = new Encoder({pin: 5, step: 1}),
+          // knob = new Encoder({pin1: 5, pin2: 6, step: 1}),
 
           // Food processor Accessory Button
 
@@ -110,9 +111,9 @@ board.on("ready", function () {
     function mounted () {
       lidButtonPin.query(function(state) {
         if (state.value == 1023) { 
-          sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false);
+          sendMessage(socket, false, "@WARNING_IS_ENABLED", false);
          } else { 
-          sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true);
+          sendMessage(socket, false, "@WARNING_IS_ENABLED", true);
           }
       });
     };
@@ -121,7 +122,7 @@ board.on("ready", function () {
 
     // Knob Controller (Dial)
 
-    knobStepper(knob, 
+    knob({a: 5, b: 6, stepper: 2},
       () => {
         sendMessage(socket, false, "@KNOB_UP", 1)
       },
@@ -130,9 +131,18 @@ board.on("ready", function () {
       }
     );
 
+    // knobStepper(knob, 
+    //   () => {
+    //     sendMessage(socket, false, "@KNOB_UP", 1)
+    //   },
+    //   () => {
+    //     sendMessage(socket, false, "@KNOB_DOWN", -1)
+    //   }
+    // );
+
     // Capacity Touch Sensor (MPR121)
 
-    capacityTouch(capTouchSensorMPR121, socket, helperLcd, 
+    capacityTouch(capTouchSensorMPR121, socket, false, 
       [{ch: 11, value: 1}, {ch: 2, value: 2}, {ch: 3, value: 3}, {ch: 10, value: 4}, {ch: 9, value: 5}, {ch: 8, value: 6}],
       ["press", "release"], "@TOUCH_DOWN", "@TOUCH_UP",
     );
@@ -144,31 +154,31 @@ board.on("ready", function () {
     // Food processor Accessory Button
 
     buttonPressable(fpAccessoryButton, false,
-      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", false)},
-      () => {sendMessage(socket, helperLcd, "@FP_ACCESSORY_IS_INSTALLED", true)}
+      () => {sendMessage(socket, false, "@FP_ACCESSORY_IS_INSTALLED", false)},
+      () => {sendMessage(socket, false, "@FP_ACCESSORY_IS_INSTALLED", true)}
     );
 
     buttonPressable(hbjAccessoryButton, false,
-      () => {sendMessage(socket, helperLcd, "@HBJ_ACCESSORY_IS_INSTALLED", false)},
-      () => {sendMessage(socket, helperLcd, "@HBJ_ACCESSORY_IS_INSTALLED", true)}
+      () => {sendMessage(socket, false, "@HBJ_ACCESSORY_IS_INSTALLED", false)},
+      () => {sendMessage(socket, false, "@HBJ_ACCESSORY_IS_INSTALLED", true)}
     );
 
     // Accessory Lid Button
     //paddleButtonLed
     buttonPressable(paddleButton, false,
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", false)},
-      () => {sendMessage(socket, helperLcd, "@PADDLE_IS_PRESSED", true)}
+      () => {sendMessage(socket, false, "@PADDLE_IS_PRESSED", false)},
+      () => {sendMessage(socket, false, "@PADDLE_IS_PRESSED", true)}
     );
 
     // Cap Button
 
     buttonPressable(lidButton, false,
       () => {
-        // sendMessage(socket, helperLcd, "@LID_IS_OPENED", true),
-            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", true)},
+        // sendMessage(socket, false, "@LID_IS_OPENED", true),
+            sendMessage(socket, false, "@WARNING_IS_ENABLED", true)},
       () => {
-        // sendMessage(socket, helperLcd, "@LID_IS_OPENED", false)
-            sendMessage(socket, helperLcd, "@WARNING_IS_ENABLED", false)}
+        // sendMessage(socket, false, "@LID_IS_OPENED", false)
+            sendMessage(socket, false, "@WARNING_IS_ENABLED", false)}
     );
 
     // --------------------------- // Recieve mesages from App --------------------------- //
@@ -182,7 +192,7 @@ board.on("ready", function () {
         for (const [accessories, value] of Object.entries(programSettings)) {
           // Program Start
           // console.log(value);
-          var speedFactor = 2.55;
+          let speedFactor = 2.55;
           for (i = 0; i < value.length; i++) {
             recieveMessage(data, "@PROGRAM_STARTED", `${value[i].name}`,
               () => {motor.start(Math.floor(value[i].speed * speedFactor)),

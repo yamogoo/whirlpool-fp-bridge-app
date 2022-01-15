@@ -4,7 +4,7 @@ const five = require("johnny-five");
 module.exports = class Motor {
 
     constructor({board, pin, type = "digital", range = [{min: 30}, {max: 255}], rpm = 9000}) {
-        // var percentage = 
+        // let percentage = 
 
         this.motor = new five.Motor({
             pin: pin,
@@ -23,7 +23,7 @@ module.exports = class Motor {
         // this.min = range.min;
         // this.max = range.max;
         // this.rpm = rpm;
-        // var value = speed / range * 100;
+        // let value = speed / range * 100;
         // this.motor.start(this.max);
         console.log(speed / this.max);
         

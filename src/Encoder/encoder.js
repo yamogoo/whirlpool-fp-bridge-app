@@ -3,7 +3,7 @@ const five = require("johnny-five");
 
 module.exports = class Encoder extends EventEmitter {
 
-  constructor({ pin, board, initialValue = 0, step = 1}) {
+  constructor({ pin1, pin2, board, initialValue = 0, step = 1}) {
 
     super();
     this.value = initialValue;
@@ -14,12 +14,12 @@ module.exports = class Encoder extends EventEmitter {
     this.lastValue = 0;
 
     this.upButton = new five.Button({
-        pin: pin,
+        pin: pin1,
         holdtime: 500,
         board,
       });
       this.downButton = new five.Button({
-        pin: pin + 1,
+        pin: pin2,
         holdtime: 500,
         board,
       });
@@ -42,7 +42,7 @@ module.exports = class Encoder extends EventEmitter {
         this.waveformTimeout = setTimeout(() => {
             this.waveform = "";
             this.lastValue = 0;
-        }, 120);
+        }, 100);
         return;
     }
 
@@ -52,7 +52,7 @@ module.exports = class Encoder extends EventEmitter {
 
     if (this.waveform === "01") {
         this.value = this.value + 1;
-        if (this.value%this.step === 0 && this.value != this.lastValue) {
+        if (this.value != this.lastValue) {
             this.lastValue = this.value;
             this.emit("change", this.value);
             this.emit("up", this.value);
@@ -61,7 +61,7 @@ module.exports = class Encoder extends EventEmitter {
         }
     } else if (this.waveform === "10") {
         this.value = this.value - 1;
-        if (this.value%this.step === 0 && this.value != this.lastValue) {
+        if (this.value != this.lastValue) {
             this.lastValue = this.value;
             this.emit("change", this.value);
             this.emit("down", this.value);
