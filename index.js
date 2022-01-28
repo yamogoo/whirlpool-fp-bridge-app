@@ -28,19 +28,14 @@ const programSettings = {
 const sendMessage = require("./src/sendMessage"),
       recieveToggleValueOfMessage = require("./src/recieveToggleValueOfMessage"),
       recieveMessage = require("./src/recieveMessage"),
-      // knobStepper = require("./src/rotaryEncoder"),
-      // buttonLed = require("./src/buttonLed"),
       buttonPressable = require("./src/buttonPressable"),
       time = require("./src/time"),
       capacityTouch = require("./src/capacityTouchMPR121");
 
-// const Encoder = require("./src/Encoder/encoder");
 const knob = require("./src/Encoder/myEncoder");
-      // Motor = require("./src/motor");
-// const johnnyFiveRotaryEncoder = require("./src/johnny-five-rotary-encoder");
 
       // Socket.IO
-const // ask = require('./ask'),
+const
       io = require('socket.io-client'),
       ip = 'localhost',
       address = `http://${ip}:9981`,
@@ -75,10 +70,6 @@ board.on("ready", function () {
 
           // false = new five.LCD({controller: "JHD1313M1", board}),
 
-          // Knob
-
-          // knob = new Encoder({pin1: 5, pin2: 6, step: 1}),
-
           // Food processor Accessory Button
 
           fpAccessoryButton = new five.Button({pin: 7, type: "digital"}),
@@ -96,7 +87,6 @@ board.on("ready", function () {
           // Motorof the Machine
 
           motor = new five.Motor({pin: 3, type: "digital"}),
-          // motor = new Motor({board, pin: 3, type: "digital", range: [{min: 30}, {max: 255}], rpm: 9000}),
 
           // Capacity Touch
 
@@ -130,15 +120,6 @@ board.on("ready", function () {
         sendMessage(socket, false, "@KNOB_DOWN", -1)
       }
     );
-
-    // knobStepper(knob, 
-    //   () => {
-    //     sendMessage(socket, false, "@KNOB_UP", 1)
-    //   },
-    //   () => {
-    //     sendMessage(socket, false, "@KNOB_DOWN", -1)
-    //   }
-    // );
 
     // Capacity Touch Sensor (MPR121)
 
@@ -233,20 +214,8 @@ socket
   })
   .on('connect', async () => {
     console.log('[SOCKETIO] connected to', address);
-    // await askForMessage();
   });
 
 socket.on('disconnect', () => {
   console.log('[SOCKETIO] disconnected');
 });
-
-// socket.on("blokdots", (data) => {
-// 	console.log("Received blokdots:", data.msg, data.val);
-// });
-
-// socket.on("disconnect", () => {
-// 	console.log(`Disconnected from blokdots`);
-// 	if(interval) {
-// 		clearInterval(interval);
-// 	}
-// });
