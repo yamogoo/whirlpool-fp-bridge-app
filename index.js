@@ -124,7 +124,7 @@ board.on("ready", function () {
     // Capacity Touch Sensor (MPR121)
 
     capacityTouch(capTouchSensorMPR121, socket, false, 
-      [{ch: 11, value: 1}, {ch: 2, value: 2}, {ch: 3, value: 3}, {ch: 10, value: 4}, {ch: 9, value: 5}, {ch: 8, value: 6}],
+      [{ch: 2, value: 1}, {ch: 8, value: 2}, {ch: 11, value: 3}, {ch: 3, value: 4}, {ch: 1, value: 5}, {ch: 0, value: 6}],
       ["press", "release"], "@TOUCH_DOWN", "@TOUCH_UP",
     );
 
